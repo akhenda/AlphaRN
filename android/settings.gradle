@@ -1,0 +1,3 @@
+rootProject.name = 'AlphaRN'
+
+include ':app'
