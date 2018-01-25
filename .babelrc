@@ -1,3 +1,13 @@
 {
-  "presets": ["react-native"]
+  "presets": ["react-native"],
+  "plugins": [
+    ["module-resolver", {
+      "root": ["./src"],
+      "alias": {
+        "src": "./src",
+        "tests": "./_tests_"
+      },
+      "cwd": "babelrc"
+    }]
+  ]
 }

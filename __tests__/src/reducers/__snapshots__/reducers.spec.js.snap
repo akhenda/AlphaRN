@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Redux Reducers handles GET_TEAM passing (English, Arsenal) 1`] = `
+Object {
+  "currentTeam": "Arsenal",
+  "match": Object {
+    "date": "2018-03-20",
+    "score1": 5,
+    "score2": 1,
+    "team1": Object {
+      "code": "ARS",
+      "key": "arsenal",
+      "name": "Arsenal",
+    },
+    "team2": Object {
+      "code": "MUN",
+      "key": "manchester-united",
+      "name": "Manchester United",
+    },
+  },
+}
+`;
+
+exports[`Redux Reducers returns the same state on an unhandled action 1`] = `
+Object {
+  "currentTeam": "",
+  "matches": Array [],
+}
+`;

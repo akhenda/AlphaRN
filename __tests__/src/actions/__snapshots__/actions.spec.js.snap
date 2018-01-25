@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Redux Actions asynchronous actions should execute fetch data 1`] = `
+Array [
+  Object {
+    "type": "FETCH_DATA_SUCCESS",
+  },
+]
+`;
+
+exports[`Redux Actions synchronous actions should dispatch addTodo action 1`] = `
+Array [
+  Object {
+    "type": "ADD_TODO",
+  },
+]
+`;

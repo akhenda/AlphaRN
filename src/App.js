@@ -10,7 +10,10 @@ import {
   StyleSheet,
   Text,
   View,
+  TextInput,
 } from 'react-native';
+
+import Child from './Child';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -20,7 +23,26 @@ const instructions = Platform.select({
 });
 
 export default class App extends Component<{}> {
+  constructor(props) {
+    super(props);
+    this.state = { text: '' };
+  }
+
+  setText(text) {
+    this.setState({ text });
+  }
+  
+  handleTextChange(text) {
+    this.setText(text);
+  }
+
+  clearText() {
+    this.setText('');
+  }
+
   render() {
+    const { text } = this.state;
+
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
@@ -32,6 +54,13 @@ export default class App extends Component<{}> {
         <Text style={styles.instructions}>
           {instructions}
         </Text>
+        <TextInput
+          value={text}
+          style={styles.input}
+          placeholder={'Write something...'}
+          onChangeText={txt => this.handleTextChange(txt)}
+        />
+        <Child text={text} onClear={() => this.clearText()} />
       </View>
     );
   }
@@ -53,5 +82,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+  },
+  input: {
+    width: '80%',
+    height: 60,
+    padding: 10,
+    alignSelf: 'center',
   },
 });
