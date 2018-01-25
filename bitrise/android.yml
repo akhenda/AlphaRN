@@ -1,0 +1,222 @@
+---
+format_version: '4'
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: react-native
+trigger_map:
+- push_branch: develop
+  workflow: deploy-to-staging
+- push_branch: "*"
+  workflow: primary
+- pull_request_target_branch: "*"
+  workflow: primary
+workflows:
+  tests:
+    after_run:
+    - _tests_slack_message
+    before_run:
+    - _init_install
+    - _unit_tests
+  primary:
+    after_run: 
+    before_run:
+    - tests
+    - _test_builds
+  deploy-to-staging:
+    after_run: 
+    before_run:
+    - primary
+    - _semantic_release
+    - _make_apk
+    - _deploy_to_beta_testers
+  _init_install:
+    description: Do initial setup
+    steps:
+    - activate-ssh-key@3.1.1: {}
+    - git-clone@4.0.5:
+        title: Git Clone Repo
+    - script@1.1.5:
+        title: To build or not to build
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
+            if [[ "$GIT_CLONE_COMMIT_MESSAGE_SUBJECT" == *"[skip ci]"* ]] ; then
+              envman add --key PROCEED_WITH_DEPLOYMENT --value 0
+            else
+              envman add --key PROCEED_WITH_DEPLOYMENT --value 1
+            fi
+    - script@1.1.5:
+        title: Install Detox Utils
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
+            brew tap wix/brew
+            brew install applesimutils --HEAD
+    - npm@0.9.0:
+        title: Install npm-cache
+        inputs:
+        - command: install -g npm-cache
+    - cache-pull@2.0.1: {}
+    - script@1.1.5:
+        title: npm-cache install
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
+            npm-cache install --cacheDirectory .
+    - install-react-native@0.9.1: {}
+    - npm@0.9.0:
+        title: Install Semantic Release
+        inputs:
+        - command: install -g semantic-release@12
+    - npm@0.9.0:
+        title: Install Detox CLI
+        inputs:
+        - command: install -g detox-cli
+    - install-missing-android-tools@2.0.6: {}
+    - cache-push@2.0.3:
+        inputs:
+        - cache_paths: "./npm"
+  _unit_tests:
+    description: Run all unit tests
+    steps:
+    - script@1.1.5:
+        title: Run Unit Tests
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
+            npm run validate
+        is_always_run: true
+  _tests_slack_message:
+    steps:
+    - slack@2.6.3:
+        title: Slack - Send Build Status
+        inputs:
+        - channel: "#bitrise-builds"
+        - from_username_on_error: Bitrise CI - Android Tests Shall Not Pass!
+        - from_username: Bitrise CI - Android Unit Tests Passed
+        - message: "*Build Number*: $BITRISE_BUILD_NUMBER\n*Build Status*: Succeeded
+            \n*Commit*: $BITRISE_GIT_MESSAGE\n*Branch*: $BITRISE_GIT_BRANCH"
+        - message_on_error: "*Build Number*: $BITRISE_BUILD_NUMBER\n*Build Status*:
+            Failed \n*Commit*: $BITRISE_GIT_MESSAGE\n*Branch*: $BITRISE_GIT_BRANCH"
+        - image_url: https://media.giphy.com/media/geslvCFM31sFW/giphy.gif
+        - image_url_on_error: https://media.giphy.com/media/1BXa2alBjrCXC/giphy.gif
+        - webhook_url: "$SLACK_WEBHOOK_URL"
+  _semantic_release:
+    steps:
+    - script@1.1.5:
+        run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
+            semantic-release
+
+            envman add --key NEW_RELEASE_VERSION --value $(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g')
+        title: Run Semantic Release
+    - slack@2.6.3:
+        title: Slack - Send Release Status
+        inputs:
+        - channel: "#bitrise-releases"
+        - from_username_on_error: Bitrise CI - Failed to Make an Android Release!
+        - from_username: Bitrise CI - We Have a New Android Release
+        - message: "*Build Number*: $BITRISE_BUILD_NUMBER\n*Build Status*: Succeeded
+            \n*Commit*: $BITRISE_GIT_MESSAGE\n*Branch*: $BITRISE_GIT_BRANCH"
+        - message_on_error: "*Build Number*: $BITRISE_BUILD_NUMBER\n*Build Status*:
+            Failed \n*Commit*: $BITRISE_GIT_MESSAGE\n*Branch*: $BITRISE_GIT_BRANCH"
+        - image_url_on_error: https://media.giphy.com/media/ZanWL0MNtv3y0/giphy.gif
+        - image_url: https://media.giphy.com/media/s2qXK8wAvkHTO/giphy.gif
+        - webhook_url: "$SLACK_WEBHOOK_URL"
+  _make_apk:
+    steps:
+    - file-downloader@0.9.1:
+        run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
+        inputs:
+        - destination: "$HOME/keystores/app.keystore"
+        - source: "$BITRISEIO_ANDROID_KEYSTORE_URL"
+    - gradle-runner@1.8.0:
+        run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
+        inputs:
+        - gradle_task: assembleRelease
+    - sign-apk@1.2.0:
+        run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
+  _test_builds:
+    steps:
+    - script@1.1.5:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            cd android && ./gradlew assembleDebug
+        title: Test Building Android Debug App
+  _deploy_to_beta_testers:
+    steps:
+    - deploy-to-bitrise-io@1.3.10:
+        is_always_run: false
+        run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
+        inputs:
+        - notify_email_list: ''
+    - testfairy-deploy-android@1.0.1:
+        run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
+        inputs:
+        - notify: 'on'
+        - auto_update: 'on'
+    - applivery-android@0.2.1:
+        run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
+app:
+  envs:
+  - opts:
+      is_expand: false
+    GRADLE_BUILD_FILE_PATH: android/build.gradle
+  - opts:
+      is_expand: false
+    GRADLEW_PATH: android/gradlew
+  - opts:
+      is_expand: false
+    BITRISE_PROJECT_PATH: ios/AlphaRN.xcodeproj
+  - opts:
+      is_expand: false
+    BITRISE_SCHEME: AlphaRN
+  - opts:
+      is_expand: false
+    BITRISE_EXPORT_METHOD: development
+  - ALPHARN_STORE_FILE: "$HOME/keystores/app.keystore"
+  - ALPHARN_STORE_PASSWORD: "$BITRISEIO_ANDROID_KEYSTORE_PASSWORD"
+  - ALPHARN_KEY_ALIAS: "$BITRISEIO_ANDROID_KEYSTORE_ALIAS"
+  - ALPHARN_KEY_PASSWORD: "$BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD"
