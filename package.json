@@ -3,17 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose",
     "lint": "eslint src/**/*.js",
     "test:watch": "jest --watch",
     "updateSnapshot": "jest --updateSnapshot",
     "coverage": "jest --coverage && open coverage/lcov-report/index.html || xdg-open coverage/lcov-report/index.html",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "start:rc": "npm start -- --reset-cache",
-    "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && npm cache clean",
+    "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && npm cache verify",
     "clean:start": "npm run clean && npm run start:rc",
     "clean:android": "npm run clean && cd android/ && ./gradlew clean && cd .. && react-native run-android",
-    "fresh-install": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf ios/build/ModuleCache/* && rm -rf node_modules/ && npm cache clean && npm install",
+    "fresh-install": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf ios/build/ModuleCache/* && rm -rf node_modules/ && npm cache verify && npm install",
     "fresh-start": "npm run fresh-install && npm run start:rc",
     "android:build": "cd android && ./gradlew assembleRelease",
     "android:install": "cd android && ./gradlew assembleRelease && ./gradlew installRelease",
@@ -21,7 +21,11 @@
     "android:logcat": "$ANDROID_HOME/platform-tools/adb logcat *:S ReactNative:V ReactNativeJS:V",
     "validate": "npm-run-all --parallel test lint",
     "precommit": "npm run validate",
-    "prepush": "npm run validate"
+    "prepush": "npm run validate",
+    "e2e:ios": "detox build --configuration ios.sim.debug && detox test --configuration ios.sim.debug",
+    "e2e:android": "detox build --configuration android.emu.debug && detox test --configuration android.emu.debug -l verbose",
+    "test:ios": "npm-run-all --parallel validate e2e:ios",
+    "test:android": "npm-run-all --parallel validate e2e:android"
   },
   "dependencies": {
     "apisauce": "^0.14.3",
@@ -37,6 +41,7 @@
     "babel-jest": "22.1.0",
     "babel-plugin-module-resolver": "^3.0.0",
     "babel-preset-react-native": "4.0.0",
+    "detox": "^7.0.0-alpha.1",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.16.0",
@@ -56,7 +61,38 @@
   },
   "jest": {
     "preset": "react-native",
-    "testRegex": "/__tests__/.*\\.spec\\.js$",
-    "setupTestFrameworkScriptFile": "./__tests__/setup.js"
+    "testRegex": "/__tests__/unit/.*\\.spec\\.js$",
+    "setupTestFrameworkScriptFile": "./__tests__/unit/setup.js"
+  },
+  "detox": {
+    "test-runner": "jest",
+    "specs": "__tests__/e2e/src",
+    "runner-config": "__tests__/e2e/config.json",
+    "configurations": {
+      "android.emu.debug": {
+        "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
+        "build": "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && cd ..",
+        "type": "android.emulator",
+        "name": "Nexus_5X_API_26"
+      },
+      "android.emu.release": {
+        "binaryPath": "android/app/build/outputs/apk/release/app-release.apk",
+        "build": "cd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release && cd ..",
+        "type": "android.emulator",
+        "name": "Nexus_5X_API_26"
+      },
+      "ios.sim.release": {
+        "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/AlphaRN.app",
+        "build": "export RCT_NO_LAUNCH_PACKAGER=true && xcodebuild -project ios/AlphaRN.xcodeproj -scheme AlphaRN -configuration Release -sdk iphonesimulator -derivedDataPath ios/build -quiet",
+        "type": "ios.simulator",
+        "name": "iPhone 7 Plus"
+      },
+      "ios.sim.debug": {
+        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/AlphaRN.app",
+        "build": "xcodebuild -project ios/AlphaRN.xcodeproj -scheme AlphaRN -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
+        "type": "ios.simulator",
+        "name": "iPhone 7 Plus"
+      }
+    }
   }
 }

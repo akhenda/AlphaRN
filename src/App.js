@@ -44,18 +44,19 @@ export default class App extends Component<{}> {
     const { text } = this.state;
 
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
+      <View testID='Welcome' style={styles.container}>
+        <Text testID='WelcomeTitle' style={styles.welcome}>
           Welcome to React Native!
         </Text>
-        <Text style={styles.instructions}>
+        <Text testID='WelcomeInstruction' style={styles.instructions}>
           To get started, edit App.js
         </Text>
-        <Text style={styles.instructions}>
+        <Text testID='Instructions' style={styles.instructions}>
           {instructions}
         </Text>
         <TextInput
           value={text}
+          testID='TextInput'
           style={styles.input}
           placeholder={'Write something...'}
           onChangeText={txt => this.handleTextChange(txt)}
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
     width: '80%',
     height: 60,
     padding: 10,
+    marginTop: 30,
     alignSelf: 'center',
   },
 });

@@ -2,5 +2,13 @@
   "extends": "../.eslintrc",
   "env": {
     "jest": true
+  },
+  "globals": {
+    "device": false,
+    "expect": false,
+    "waitFor": false,
+    "element": false,
+    "jasmine": false,
+    "by": false,
   }
 }

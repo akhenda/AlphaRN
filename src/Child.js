@@ -14,16 +14,16 @@ export default class Child extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>
-          Capitalized text:
+      <View testID='Child' style={styles.container}>
+        <Text testID='ChildTitle' style={styles.title}>
+          Capitalized Text:
         </Text>
-        <Text style={styles.text}>
+        <Text testID='ChildOutput' style={styles.text}>
           {this.getCapitalizedText()}
         </Text>
-        <TouchableOpacity onPress={this.props.onClear}>
+        <TouchableOpacity testID='ClearText' onPress={this.props.onClear}>
           <Text style={styles.button}>
-            Clear text
+            CLEAR TEXT
           </Text>
         </TouchableOpacity>
       </View>
@@ -42,16 +42,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     marginBottom: 20,
   },
   text: {
-    fontSize: 18,
+    fontSize: 16,
     padding: 20,
   },
   button: {
+    fontSize: 18,
     marginTop: 30,
-    fontSize: 30,
-    color: '#007aff',
+    color: 'azure',
+    borderRadius: 6,
+    fontWeight: 'bold',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: 'darkkhaki',
   },
 });

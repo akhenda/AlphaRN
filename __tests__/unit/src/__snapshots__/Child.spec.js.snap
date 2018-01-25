@@ -8,6 +8,7 @@ exports[`Child renders correctly 1`] = `
       "marginTop": 20,
     }
   }
+  testID="Child"
 >
   <Text
     accessible={true}
@@ -15,12 +16,13 @@ exports[`Child renders correctly 1`] = `
     ellipsizeMode="tail"
     style={
       Object {
-        "fontSize": 20,
+        "fontSize": 18,
         "marginBottom": 20,
       }
     }
+    testID="ChildTitle"
   >
-    Capitalized text:
+    Capitalized Text:
   </Text>
   <Text
     accessible={true}
@@ -28,10 +30,11 @@ exports[`Child renders correctly 1`] = `
     ellipsizeMode="tail"
     style={
       Object {
-        "fontSize": 18,
+        "fontSize": 16,
         "padding": 20,
       }
     }
+    testID="ChildOutput"
   >
     mock string value
   </Text>
@@ -57,7 +60,7 @@ exports[`Child renders correctly 1`] = `
         "opacity": 1,
       }
     }
-    testID={undefined}
+    testID="ClearText"
     tvParallaxProperties={undefined}
   >
     <Text
@@ -66,13 +69,18 @@ exports[`Child renders correctly 1`] = `
       ellipsizeMode="tail"
       style={
         Object {
-          "color": "#007aff",
-          "fontSize": 30,
+          "backgroundColor": "darkkhaki",
+          "borderRadius": 6,
+          "color": "azure",
+          "fontSize": 18,
+          "fontWeight": "bold",
           "marginTop": 30,
+          "paddingHorizontal": 15,
+          "paddingVertical": 10,
         }
       }
     >
-      Clear text
+      CLEAR TEXT
     </Text>
   </View>
 </View>

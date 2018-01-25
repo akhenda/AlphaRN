@@ -10,6 +10,7 @@ exports[`App renders correctly 1`] = `
       "justifyContent": "center",
     }
   }
+  testID="Welcome"
 >
   <Text
     accessible={true}
@@ -22,6 +23,7 @@ exports[`App renders correctly 1`] = `
         "textAlign": "center",
       }
     }
+    testID="WelcomeTitle"
   >
     Welcome to React Native!
   </Text>
@@ -36,6 +38,7 @@ exports[`App renders correctly 1`] = `
         "textAlign": "center",
       }
     }
+    testID="WelcomeInstruction"
   >
     To get started, edit App.js
   </Text>
@@ -50,6 +53,7 @@ exports[`App renders correctly 1`] = `
         "textAlign": "center",
       }
     }
+    testID="Instructions"
   >
     Press Cmd+R to reload,
 Cmd+D or shake for dev menu
@@ -62,10 +66,12 @@ Cmd+D or shake for dev menu
       Object {
         "alignSelf": "center",
         "height": 60,
+        "marginTop": 30,
         "padding": 10,
         "width": "80%",
       }
     }
+    testID="TextInput"
     value=""
   />
   <View
@@ -75,6 +81,7 @@ Cmd+D or shake for dev menu
         "marginTop": 20,
       }
     }
+    testID="Child"
   >
     <Text
       accessible={true}
@@ -82,12 +89,13 @@ Cmd+D or shake for dev menu
       ellipsizeMode="tail"
       style={
         Object {
-          "fontSize": 20,
+          "fontSize": 18,
           "marginBottom": 20,
         }
       }
+      testID="ChildTitle"
     >
-      Capitalized text:
+      Capitalized Text:
     </Text>
     <Text
       accessible={true}
@@ -95,10 +103,11 @@ Cmd+D or shake for dev menu
       ellipsizeMode="tail"
       style={
         Object {
-          "fontSize": 18,
+          "fontSize": 16,
           "padding": 20,
         }
       }
+      testID="ChildOutput"
     >
       You have not written anything!
     </Text>
@@ -124,7 +133,7 @@ Cmd+D or shake for dev menu
           "opacity": 1,
         }
       }
-      testID={undefined}
+      testID="ClearText"
       tvParallaxProperties={undefined}
     >
       <Text
@@ -133,13 +142,18 @@ Cmd+D or shake for dev menu
         ellipsizeMode="tail"
         style={
           Object {
-            "color": "#007aff",
-            "fontSize": 30,
+            "backgroundColor": "darkkhaki",
+            "borderRadius": 6,
+            "color": "azure",
+            "fontSize": 18,
+            "fontWeight": "bold",
             "marginTop": 30,
+            "paddingHorizontal": 15,
+            "paddingVertical": 10,
           }
         }
       >
-        Clear text
+        CLEAR TEXT
       </Text>
     </View>
   </View>
