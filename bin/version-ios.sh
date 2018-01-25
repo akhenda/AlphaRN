@@ -1,6 +1,6 @@
 #!/usr/bin/env bash -e
 
-PROJECT_DIR="ios/WAPI"
+PROJECT_DIR="ios/AlphaRN"
 INFOPLIST_FILE="Info.plist"
 INFOPLIST_DIR="${PROJECT_DIR}/${INFOPLIST_FILE}"
 
