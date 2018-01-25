@@ -30,7 +30,7 @@
     "test:ios": "npm-run-all --parallel validate e2e:ios",
     "test:android": "npm-run-all --parallel validate e2e:android",
     "preversion": "./bin/pre-version.sh",
-    "version": "./bin/version-ios.sh && auto-changelog -p && git add CHANGELOG.md",
+    "version": "./bin/version-ios.sh",
     "postversion": "./bin/post-version.sh"
   },
   "dependencies": {
@@ -45,6 +45,8 @@
   "devDependencies": {
     "@commitlint/cli": "^6.0.2",
     "@commitlint/config-conventional": "^6.0.2",
+    "@semantic-release/changelog": "^1.0.0",
+    "@semantic-release/git": "^2.0.1",
     "babel-eslint": "^8.2.1",
     "babel-jest": "22.1.0",
     "babel-plugin-module-resolver": "^3.0.0",
@@ -82,6 +84,31 @@
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
+    ]
+  },
+  "release": {
+    "branch": "develop",
+    "verifyConditions": [
+      "@semantic-release/changelog",
+      "@semantic-release/git",
+      "@semantic-release/github"
+    ],
+    "getLastRelease": "@semantic-release/git",
+    "publish": [
+      {
+        "path": "@semantic-release/changelog",
+        "changelogFile": "docs/CHANGELOG.md"
+      },
+      {
+        "path": "@semantic-release/git",
+        "assets": [
+          "package.json",
+          "ios/WAPI",
+          "docs"
+        ],
+        "message": "chore(release): ${nextRelease.version} - ${new Date().toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })} [skip ci]\n\n${nextRelease.notes}"
+      },
+      "@semantic-release/github"
     ]
   },
   "jest": {
