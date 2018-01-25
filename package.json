@@ -20,7 +20,7 @@
     "android:devices": "$ANDROID_HOME/platform-tools/adb devices",
     "android:logcat": "$ANDROID_HOME/platform-tools/adb logcat *:S ReactNative:V ReactNativeJS:V",
     "validate": "npm-run-all --parallel test lint",
-    "precommit": "npm run validate",
+    "precommit": "npm run validate && exec < /dev/tty && node ./bin/post-commit.js",
     "prepush": "npm run validate",
     "postcommit": "node ./bin/post-commit.js",
     "e2e:ios": "detox build --configuration ios.sim.debug && detox test --configuration ios.sim.debug",
