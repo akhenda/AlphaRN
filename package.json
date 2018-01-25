@@ -33,6 +33,9 @@
     "postversion": "./bin/post-version.sh",
     "prepare": "patch-package --ignore-whitespace"
   },
+  "engines": {
+    "node": ">=8.1.4"
+  },
   "dependencies": {
     "apisauce": "^0.14.3",
     "prop-types": "^15.6.0",

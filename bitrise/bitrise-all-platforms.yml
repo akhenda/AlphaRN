@@ -34,10 +34,10 @@ workflows:
   _init_install:
     description: Do initial setup
     steps:
-    - activate-ssh-key: {}
-    - git-clone:
+    - activate-ssh-key@3.1.1: {}
+    - git-clone@4.0.5:
         title: Git Clone Repo
-    - script:
+    - script@1.1.5:
         title: To build or not to build
         inputs:
         - content: |-
@@ -54,42 +54,55 @@ workflows:
             else
               envman add --key PROCEED_WITH_DEPLOYMENT --value 1
             fi
-    - npm:
+    - npm@0.9.0:
         title: Install npm-cache
         inputs:
         - command: install -g npm-cache
-    - cache-pull: {}
-    - script:
+    - cache-pull@2.0.1: {}
+    - script@1.1.5:
         title: npm-cache install
         inputs:
         - content: |-
             #!/usr/bin/env bash
 
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
             npm-cache install --cacheDirectory .
-    - cache-push:
+    - cache-push@2.0.3:
         inputs:
         - cache_paths: "./npm"
-    - install-react-native: {}
-    - npm:
+    - install-react-native@0.9.1: {}
+    - npm@0.9.0:
         title: Install Detox CLI
         inputs:
         - command: install -g detox-cli
-    - npm:
+    - npm@0.9.0:
         title: Install Semantic Release
         inputs:
         - command: install -g semantic-release@12
-    - script:
+    - script@1.1.5:
         title: Install Detox Utils
         inputs:
         - content: |-
             #!/usr/bin/env bash
 
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
             brew tap facebook/fb
             export CODE_SIGNING_REQUIRED=NO
-            brew install fbsimctl
+            brew install fbsimctl --HEAD
 
             brew tap wix/brew
             brew install applesimutils --HEAD
+    - install-missing-android-tools@2.0.6: {}
   _unit_tests:
     description: Run all unit tests
     steps:
@@ -99,73 +112,127 @@ workflows:
         - content: |-
             #!/usr/bin/env bash
 
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
             npm run validate
         is_always_run: true
   _integration_and_e2e_debug_tests:
     description: Run all Integration and E2E Debug App Tests using Detox
     steps:
-    - script:
+    - script@1.1.5:
         title: Detox - Build Android Debug App
         inputs:
         - content: |-
             #!/usr/bin/env bash
 
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
             detox build --configuration android.emu.debug
-    - script:
+    - script@1.1.5:
         title: Detox - Build iOS Debug App
         inputs:
         - content: |-
             #!/usr/bin/env bash
 
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
             detox build --configuration ios.sim.debug
-    - script:
+    - script@1.1.5:
         title: Detox - Run Android E2E Debug Tests
         inputs:
         - content: |-
             #!/usr/bin/env bash
 
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
             detox test --configuration android.emu.debug --cleanup
-    - script:
+    - script@1.1.5:
         title: Detox - Run iOS E2E Debug Tests
         inputs:
         - content: |-
             #!/usr/bin/env bash
 
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
             detox test --configuration ios.sim.debug --cleanup
   _integration_and_e2e_release_tests:
     description: Run all Integration and E2E Release App Tests using Detox
     steps:
-    - script:
+    - script@1.1.5:
         title: Detox - Build Android Release App
         inputs:
         - content: |-
             #!/usr/bin/env bash
 
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
             detox build --configuration android.emu.release
-    - script:
+    - script@1.1.5:
         title: Detox - Build iOS Release App
         inputs:
         - content: |-
             #!/usr/bin/env bash
 
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
             detox build --configuration ios.sim.release
-    - script:
+    - script@1.1.5:
         title: Detox - Run Android E2E Release Tests
         inputs:
         - content: |-
             #!/usr/bin/env bash
 
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
             detox test --configuration android.emu.release --cleanup
-    - script:
+    - script@1.1.5:
         title: Detox - Run iOS E2E Release Tests
         inputs:
         - content: |-
             #!/usr/bin/env bash
 
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
+
             detox test --configuration ios.sim.release --cleanup
   _tests_slack_message:
     steps:
-    - slack:
+    - slack@2.6.3:
         title: Slack - Send Build Status
         inputs:
         - channel: "#bitrise-builds"
@@ -180,35 +247,33 @@ workflows:
         - webhook_url: "$SLACK_WEBHOOK_URL"
   _semantic_release:
     steps:
-    - script:
+    - script@1.1.5:
+        run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
         inputs:
         - content: |-
             #!/usr/bin/env bash
+
+            # fail if any commands fails
+            set -e
+
+            # debug log
+            set -x
 
             semantic-release
         title: Run Semantic Release
   _make_apk:
     steps:
-    - script:
-        title: Gradlew Release
+    - file-downloader@0.9.1:
         run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
         inputs:
-        - content: |-
-            #!/usr/bin/env bash
-
-            export ENVFILE=$ENVFILE && cd android && ./gradlew assembleRelease
-    - sign-apk:
+        - destination: "$HOME/keystores/app.keystore"
+        - source: "$BITRISEIO_ANDROID_KEYSTORE_URL"
+    - gradle-runner@1.8.0:
         run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
         inputs:
-        - apk_path: "/bitrise/src/android/app/build/outputs/apk/app-release-unsigned.apk"
-    - script:
-        title: Copy APK to Deploy Directory
+        - gradle_task: assembleRelease
+    - sign-apk@1.2.0:
         run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
-        inputs:
-        - content: |-
-            #!/usr/bin/env bash
-
-            cp $BITRISE_SIGNED_APK_PATH $BITRISE_DEPLOY_DIR/signed-app-release.apk
   _test_builds:
     steps:
     - react-native-bundle@1.0.3:
@@ -217,6 +282,17 @@ workflows:
         - platform: android
         - entry_file: index.js
         title: Test Building Android App
+    - script@1.1.5:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+
+            cd android && ./gradlew assembleDebug
+        title: Test Building Android Debug App
     - react-native-bundle@1.0.3:
         inputs:
         - assetRoots: ''
@@ -224,27 +300,31 @@ workflows:
         title: Test Building iOS App
   _xcode_archive:
     steps:
-    - certificate-and-profile-installer:
+    - certificate-and-profile-installer@1.9.2:
         run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
-    - xcode-archive:
+    - xcode-archive@2.4.4:
         run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
   _deploy_to_beta_testers:
     steps:
-    - deploy-to-bitrise-io:
+    - deploy-to-bitrise-io@1.3.10:
         is_always_run: false
         run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
         inputs:
-        - notify_user_groups: none
-        - notify_email_list: 
-    - testfairy-deploy:
+        - notify_email_list: akhenda@gmail.com
+    - testfairy-deploy@2.0.1:
         run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
         inputs:
+        - notify: 'on'
+        - auto_update: 'on'
         - api_key: "$TEST_FAIRY_API_KEY"
-    - testfairy-deploy-android:
+    - testfairy-deploy-android@1.0.1:
         run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
-    - applivery-android:
+        inputs:
+        - notify: 'on'
+        - auto_update: 'on'
+    - applivery-android@0.2.1:
         run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
-    - applivery-ios:
+    - applivery-ios@0.2.1:
         run_if: '{{enveq "PROCEED_WITH_DEPLOYMENT" "1"}}'
 app:
   envs:
@@ -256,10 +336,14 @@ app:
     GRADLEW_PATH: android/gradlew
   - opts:
       is_expand: false
-    BITRISE_PROJECT_PATH: ios/AlphaRN.xcodeproj
+    BITRISE_PROJECT_PATH: ios/ShoppingCart.xcodeproj
   - opts:
       is_expand: false
     BITRISE_SCHEME: AlphaRN
   - opts:
       is_expand: false
     BITRISE_EXPORT_METHOD: development
+  - ALPHARN_STORE_FILE: "$HOME/keystores/app.keystore"
+  - ALPHARN_STORE_PASSWORD: "$BITRISEIO_ANDROID_KEYSTORE_PASSWORD"
+  - ALPHARN_KEY_ALIAS: "$BITRISEIO_ANDROID_KEYSTORE_ALIAS"
+  - ALPHARN_KEY_PASSWORD: "$BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD"
