@@ -45,6 +45,7 @@
     "@commitlint/cli": "^6.0.2",
     "@commitlint/config-conventional": "^6.0.2",
     "@semantic-release/changelog": "^1.0.0",
+    "@semantic-release/exec": "^1.0.1",
     "@semantic-release/git": "^2.0.1",
     "babel-eslint": "^8.2.1",
     "babel-jest": "22.1.0",
@@ -97,6 +98,14 @@
       {
         "path": "@semantic-release/changelog",
         "changelogFile": "docs/CHANGELOG.md"
+      },
+      {
+        "path": "@semantic-release/npm",
+        "npmPublish": false
+      },
+      {
+        "path": "@semantic-release/exec",
+        "cmd": "bin/version-ios.sh"
       },
       {
         "path": "@semantic-release/git",
