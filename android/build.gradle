@@ -1,4 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+import groovy.json.JsonSlurper
 
 buildscript {
     repositories {
@@ -24,5 +25,37 @@ allprojects {
             url "$rootDir/../node_modules/react-native/android"
         }
         google()
+    }
+}
+
+def getNpmVersion() {
+    def inputFile = file("../package.json")
+    // println "[$inputFile]"
+    def packageJson = new JsonSlurper().parseText(inputFile.text)
+    return packageJson["version"]
+}
+
+def getNpmVersionArray() { // major [0], minor [1], patch [2]
+    def (major, minor, patch) = getNpmVersion().tokenize('.')
+    return [Integer.parseInt(major), Integer.parseInt(minor), Integer.parseInt(patch)] as int[]
+}
+
+/* calculated from git commits to give sequential integers */
+def getGitVersion() {
+    def process = "git rev-list HEAD --first-parent --count".execute()
+    def num = process.text.trim()
+    // println "[$num]"
+    return num.toInteger()
+}
+
+/* It’s important that versionCode is an integer – so we can’t use semantic versioning here. This is used on the play store to tell which versions come after others – that’s why it’s tied to git commits in getGitVersion */
+
+subprojects {
+    ext {
+        def npmVersion = getNpmVersionArray()
+        versionMajor = npmVersion[0]
+        versionMinor = npmVersion[1]
+        versionPatch = npmVersion[2]
+        googleVer = getGitVersion()
     }
 }
