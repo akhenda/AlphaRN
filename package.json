@@ -1,6 +1,6 @@
 {
   "name": "AlphaRN",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "gc": "git add . && git-cz",
