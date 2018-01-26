@@ -37,6 +37,7 @@ const colors = {
   separator: '#DEDEDE',
   lighterText: '#333333',
   lightestText: '#575757',
+  loadingBackground: '#FFFFFF',
   statusBarTranslucent: 'rgba(0, 0, 0, 0.2)',
   statusBarTranslucentDark: 'rgba(0, 0, 0, 0.4)',
   statusBarTranslucentDarker: 'rgba(0, 0, 0, 0.6)',
