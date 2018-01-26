@@ -16,6 +16,7 @@ module.exports = {
     { name: 'build' },
     { name: 'tests' },
     { name: 'redux' },
+    { name: 'components' },
     { name: 'intro' },
     { name: 'auth' },
     { name: 'navigation' },
