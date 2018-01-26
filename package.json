@@ -125,6 +125,7 @@
     ]
   },
   "jest": {
+    "collectCoverage": true,
     "preset": "react-native",
     "testRegex": "/__tests__/unit/.*\\.spec\\.js$",
     "setupTestFrameworkScriptFile": "./__tests__/unit/setup.js"
