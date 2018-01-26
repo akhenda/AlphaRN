@@ -119,7 +119,7 @@
           "ios/WAPI",
           "docs"
         ],
-        "message": "chore(release): release ${nextRelease.version} - ${new Date().toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })} [skip ci]\n\n${nextRelease.notes}"
+        "message": "chore(release): v${nextRelease.version} - <%= new Date().toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'}) %> [skip ci]\n\n${nextRelease.notes}"
       },
       "@semantic-release/github"
     ]
