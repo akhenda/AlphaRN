@@ -25,6 +25,8 @@ module.exports = {
     { name: 'structure' },
     { name: 'android' },
     { name: 'permissions' },
+    { name: 'models' },
+    { name: 'services' },
   ],
 
   // override the messages, defaults are as follows
