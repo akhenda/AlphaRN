@@ -1,0 +1,6 @@
+{
+    "code": "jwt_auth_valid_token",
+    "data": {
+        "status": 200
+    }
+}

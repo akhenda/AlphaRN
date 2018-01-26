@@ -54,3 +54,4 @@ buck-out/
 
 # Jest Coverage Directory
 coverage/
+.env

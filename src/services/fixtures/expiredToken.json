@@ -1,0 +1,7 @@
+{
+    "code": "jwt_auth_invalid_token",
+    "message": "Expired token",
+    "data": {
+        "status": 403
+    }
+}

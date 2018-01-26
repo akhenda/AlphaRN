@@ -1,0 +1,26 @@
+{
+    "id": 1,
+    "name": "Awesome User",
+    "url": "",
+    "description": "Dummy user fixture.",
+    "link": "https://example.com/users/awesome/",
+    "slug": "awesome",
+    "avatar_urls": {
+        "24": "http://img.dummy-image-generator.com/people/dummy-24x24-Centurion-plain.jpg",
+        "48": "http://img.dummy-image-generator.com/people/dummy-48x48-Centurion-plain.jpg",
+        "96": "http://img.dummy-image-generator.com/people/dummy-96x96-Centurion-plain.jpg"
+    },
+    "meta": [],
+    "_links": {
+        "self": [
+            {
+                "href": "https://example.com/users/1"
+            }
+        ],
+        "collection": [
+            {
+                "href": "https://example.com/users"
+            }
+        ]
+    }
+}
