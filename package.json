@@ -136,7 +136,8 @@
     "collectCoverage": true,
     "preset": "react-native",
     "testRegex": "/__tests__/unit/.*\\.spec\\.js$",
-    "setupTestFrameworkScriptFile": "./__tests__/unit/setup.js"
+    "setupTestFrameworkScriptFile": "./__tests__/unit/setup.js",
+    "transformIgnorePatterns": ["node_modules/(?!react-native|native-base|react-navigation|mobx-react)"]
   },
   "detox": {
     "test-runner": "jest",

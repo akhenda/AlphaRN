@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
-import { capitalizeWords } from './utils/capitalize';
+import { capitalizeWords } from 'src/utils/capitalize';
 
 export default class Child extends Component {
   getCapitalizedText() {

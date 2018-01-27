@@ -3,7 +3,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import renderer from 'react-test-renderer';
 
-import Child from 'src/Child';
+import Child from 'src/components/Child';
 import * as Utils from 'src/utils/capitalize';
 
 

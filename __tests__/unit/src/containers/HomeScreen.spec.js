@@ -3,22 +3,22 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import renderer from 'react-test-renderer';
 
-import App from 'src/App';
-import Child from 'src/Child';
+import HomeScreen from 'src/containers/HomeScreen';
+import Child from 'src/components/Child';
 
 
-describe('App', () => {
+describe('HomeScreen', () => {
   let component;
   let textInput;
   const defaultState = { text: '' };
 
   test('renders correctly', () => {
-    const tree = renderer.create(<App />).toJSON();
+    const tree = renderer.create(<HomeScreen />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 
   beforeEach(() => {
-    component = shallow(<App />);
+    component = shallow(<HomeScreen />);
     textInput = component.find('TextInput');
   });
 
