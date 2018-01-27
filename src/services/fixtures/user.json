@@ -1,6 +1,9 @@
 {
     "id": 1,
     "name": "Awesome User",
+    "first_name": "Awesome",
+    "last_name": "User",
+    "username": "awesome",
     "url": "",
     "description": "Dummy user fixture.",
     "link": "https://example.com/users/awesome/",
