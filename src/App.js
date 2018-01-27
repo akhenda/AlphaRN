@@ -1,94 +1,37 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
+import 'src/config';
 import React, { Component } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-} from 'react-native';
+import { View, Image, StatusBar } from 'react-native';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/es/integration/react';
 
-import Child from './Child';
+import { store, persistor } from 'src/state';
+import { images, colors } from './theme';
+import styles from './theme/styles';
+import RootContainer from './containers/RootContainer';
+import LoadingIndicator from './components/LoadingIndicator';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
 
-export default class App extends Component<{}> {
-  constructor(props) {
-    super(props);
-    this.state = { text: '' };
-  }
-
-  setText(text) {
-    this.setState({ text });
-  }
-  
-  handleTextChange(text) {
-    this.setText(text);
-  }
-
-  clearText() {
-    this.setText('');
+class App extends Component {
+  onBeforeLift = () => {
+    // take some action before the gate lifts
   }
 
   render() {
-    const { text } = this.state;
-
     return (
-      <View testID='Welcome' style={styles.container}>
-        <Text testID='WelcomeTitle' style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text testID='WelcomeInstruction' style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text testID='Instructions' style={styles.instructions}>
-          {instructions}
-        </Text>
-        <TextInput
-          value={text}
-          testID='TextInput'
-          style={styles.input}
-          placeholder={'Write something...'}
-          onChangeText={txt => this.handleTextChange(txt)}
-        />
-        <Child text={text} onClear={() => this.clearText()} />
-      </View>
+      <Provider store={store}>
+        <PersistGate 
+          loading={<LoadingIndicator />}
+          onBeforeLift={this.onBeforeLift}
+          persistor={persistor}>
+          <View style={styles.mainContainer}>
+            <StatusBar translucent barStyle="light-content" backgroundColor={colors.statusBarTranslucent} />
+            <Image source={images.background} style={styles.backgroundImage} />
+            <RootContainer />
+          </View>
+        </PersistGate>
+      </Provider>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-  input: {
-    width: '80%',
-    height: 60,
-    padding: 10,
-    marginTop: 30,
-    alignSelf: 'center',
-  },
-});
+export default App;
