@@ -18,7 +18,10 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { text: '' };
+    this.state = {
+      text: '',
+      loading: false,
+    };
   }
   
   setText(text) {

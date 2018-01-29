@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Content, Button, Text, Icon } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 
+import { signOut } from 'src/state/actions/auth';
 import { images } from 'src/theme';
 import styles from './styles/DrawerContentStyles';
 
@@ -46,7 +47,7 @@ class DrawerContent extends Component {
           {this.renderMenuItem('home', Actions.home, 'Home', 'blue')}
           {this.renderMenuItem('settings', Actions.home, 'Settings', 'black', styles.lastMenuItem)}
         </View>
-        <TouchableOpacity style={styles.signOut}>
+        <TouchableOpacity style={styles.signOut} onPress={this.props.signOut}>
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
       </Content>
@@ -56,6 +57,7 @@ class DrawerContent extends Component {
 
 DrawerContent.propTypes = {
   user: PropTypes.object,
+  signOut: PropTypes.func,
 };
 
 const mapStateToProps = (state) => {
@@ -64,4 +66,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(DrawerContent);
+export default connect(mapStateToProps, { signOut })(DrawerContent);
