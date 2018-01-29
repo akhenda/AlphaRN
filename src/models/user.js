@@ -74,7 +74,7 @@ export const signInUser = (dispatch, email, password) => {
 };
 
 export const fetchUserInfo = (dispatch, token) => {
-  api.setHeader('Authorization', `Bearer ${token}`);
+  if (!DebugConfig.useFixtures) api.setHeader('Authorization', `Bearer ${token}`);
   api
     .getUser('edit')
     .then((res) => {

@@ -51,7 +51,7 @@ class LoginScreen extends Component {
     return (
       <Container style={styles.container}>
         <StatusBar translucent barStyle="light-content" backgroundColor={colors.statusBarTranslucent} />
-        <ImageBackground source={images.background85} style={styles.backgroundImage}>
+        <ImageBackground source={images.background3} style={styles.backgroundImage}>
           <Content contentContainerStyle={styles.content}>
             <LogoWrapper pageTitle="Log In" error={msg} />
             <Form

@@ -47,7 +47,7 @@ class Form extends Component {
           keyboardType={keyboard}
           placeholder={placeholder}
           style={styles.textInputField}
-          placeholderTextColor={colors.secondary.main}
+          placeholderTextColor={colors.primary.lightest}
           secureTextEntry={placeholder === 'Password'}
           autoCapitalize={placeholder === 'Full Name' ? 'words' : 'none'}
         />

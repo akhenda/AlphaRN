@@ -29,21 +29,21 @@ class WalkthroughScreen extends Component {
     const pageArray = [
       {
         backgroundColor: colors.primary.dark,
-        image: this.renderImage(images.discover),
-        title: 'Discover',
-        subtitle: 'Local businesses, artisans and initiatives',
+        image: this.renderImage(images.abstract1),
+        title: 'Welcome',
+        subtitle: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.',
       },
       {
         backgroundColor: colors.primary.main,
-        image: this.renderImage(images.connect),
-        title: 'Connect',
-        subtitle: 'With inspiring and talented people',
+        image: this.renderImage(images.abstract2),
+        title: 'Donec',
+        subtitle: 'Aenean commodo ligula eget dolor.',
       },
       {
         backgroundColor: colors.primary.light,
-        image: this.renderImage(images.support),
-        title: 'Support',
-        subtitle: 'Causes you care about',
+        image: this.renderImage(images.abstract3),
+        title: 'Nullam',
+        subtitle: 'Aenean imperdiet. Etiam ultricies nisi vel augue.',
       },
     ];
 
