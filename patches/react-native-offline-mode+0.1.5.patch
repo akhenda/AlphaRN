@@ -1,0 +1,50 @@
+patch-package
+--- a/node_modules/react-native-offline-mode/index.js
++++ b/node_modules/react-native-offline-mode/index.js
+@@ -14,12 +14,22 @@ const RequiresConnection = (WhenOnline, WhenOffline) => class RequiresConnection
+   }
+ 
+   componentDidMount () {
+-    let connect = (reach) => this.setState({ isConnected: reach !== 'none' })
++    // let connect = (reach) => this.setState({ isConnected: reach !== 'none' })
+ 
+-    NetInfo.fetch().done((reach) => {
+-      connect(reach)
+-      NetInfo.addEventListener('change', connect)
+-    })
++    // NetInfo.fetch().done((reach) => {
++    //   connect(reach)
++    //   NetInfo.addEventListener('change', connect)
++    // })
++    
++    const handleFirstConnectivityChange = (connectionInfo) => {
++      this.setState({ isConnected: connectionInfo.type !== 'none' })
++      // NetInfo.removeEventListener(
++      //   'connectionChange',
++      //   handleFirstConnectivityChange
++      // );
++    }
++
++    NetInfo.addEventListener('connectionChange', handleFirstConnectivityChange);
+   }
+ 
+   render () {
+@@ -30,11 +40,13 @@ const RequiresConnection = (WhenOnline, WhenOffline) => class RequiresConnection
+     } else {
+       const message = WhenOffline || "We're sorry, there seems to be a problem with your internet connection. The application will resume as soon as it is able to reconnect to the internet."
+ 
+-      return <View style={styles.container}>
+-        <Text style={styles.connectionProblemMessage}>
+-          {message}
+-        </Text>
+-      </View>
++      return (
++        <View style={styles.container}>
++          <Text style={styles.connectionProblemMessage}>
++            {message}
++          </Text>
++        </View>
++      );
+     }
+   }
+ }
