@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 
 import Child from 'src/components/Child';
 import LoadingIndicator from 'src/components/LoadingIndicator';
-import { getUserInfo } from 'src/state/actions/auth';
 import styles from './styles/HomeScreenStyles';
 
 const instructions = Platform.select({
@@ -67,7 +66,6 @@ class HomeScreen extends Component {
 HomeScreen.propTypes = {
   user: PropTypes.object,
   token: PropTypes.string,
-  getUserInfo: PropTypes.func,
 };
 
 const mapStateToProps = (state) => {
@@ -77,4 +75,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getUserInfo })(HomeScreen);
+export default connect(mapStateToProps, null)(HomeScreen);

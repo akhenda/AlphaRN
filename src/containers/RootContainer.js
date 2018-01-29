@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Router, Scene, Drawer } from 'react-native-router-flux';
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 
+import WalkthroughScreen from 'src/containers/WalkthroughScreen';
 import LoginScreen from 'src/containers/LoginScreen';
 import SignUpScreen from 'src/containers/SignUpScreen';
 import HomeScreen from 'src/containers/HomeScreen';
@@ -24,6 +25,7 @@ class RootContainer extends Component {
 
   render() {
     const {
+      introduced,
       user,
       authenticated,
     } = this.props;
@@ -45,6 +47,7 @@ class RootContainer extends Component {
             >
               <Scene key="login" title="Log In" component={LoginScreen} />
               <Scene key="signup" title="Sign Up" component={SignUpScreen} />
+              <Scene initial={!introduced} key="intro" title="Sign Up" component={WalkthroughScreen} />
             </Scene>
             <Drawer
               hideNavBar
