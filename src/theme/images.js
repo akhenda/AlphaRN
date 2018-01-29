@@ -6,6 +6,7 @@ const images = {
   loading: require('src/images/loading.gif'),
   background: require('src/images/background.jpg'),
   avatar: require('src/images/default-avatar.png'),
+  noInternet: require('src/images/no-internet.gif'),
 };
 
 export default images;
