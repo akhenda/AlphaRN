@@ -7,6 +7,10 @@ const images = {
   background: require('src/images/background.jpg'),
   avatar: require('src/images/default-avatar.png'),
   noInternet: require('src/images/no-internet.gif'),
+  abstract1: require('src/images/abstract-1.png'),
+  abstract2: require('src/images/abstract-2.png'),
+  abstract3: require('src/images/abstract-3.png'),
+  abstract4: require('src/images/abstract-4.png'),
 };
 
 export default images;
