@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     elevation: 6,
 
     // iOS Drop Shadow
-    borderWidth: 5,
+    borderWidth: 0,
     borderColor: colors.secondary.main,
     shadowColor: '#fff',
     shadowOffset: {

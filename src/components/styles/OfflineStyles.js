@@ -19,10 +19,11 @@ const styles = StyleSheet.create({
   },
   
   description: {
-    fontSize: 15,
+    fontSize: 13,
     marginTop: 20,
-    lineHeight: 30,
+    lineHeight: 20,
     textAlign: 'center',
+    paddingHorizontal: 20,
     color: colors.lightestText,
   },
   button: {
