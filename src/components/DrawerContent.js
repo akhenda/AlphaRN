@@ -11,7 +11,7 @@ import styles from './styles/DrawerContentStyles';
 class DrawerContent extends Component {
   renderMenuItem(icon, action, title, color, style) {
     return (
-      <TouchableOpacity onPress={action} style={[styles.menuItem, style]}>
+      <TouchableOpacity key={icon} onPress={action} style={[styles.menuItem, style]}>
         <Icon name={icon} style={[styles.menuItemIcon, { color }]} />
         <Text style={styles.menuItemText}>{title}</Text>
       </TouchableOpacity>
@@ -41,7 +41,7 @@ class DrawerContent extends Component {
             <Text style={styles.profileButtonText}>Profile</Text>
           </Button>
         </View>
-        <Image source={images.avatar} style={styles.avatar} />
+        <Image source={{ uri: user.avatar_urls['96'] }} style={styles.avatar} />
         <View style={styles.menuItems}>
           {this.renderMenuItem('home', Actions.home, 'Home', 'blue')}
           {this.renderMenuItem('settings', Actions.home, 'Settings', 'black', styles.lastMenuItem)}
